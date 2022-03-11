@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  influxdb:
+    image: influxdb:2.1.1-alpine
+    volumes:
+      - influxdbv2:/var/lib/influxdb2
+    ports:
+      - "8086:8086"
+    depends_on:
+      - influxdb_cli
+ 
+  influxdb_cli:
+    image: influxdb:2.1.1-alpine
+    volumes:
+      - influxdbv2:/var/lib/influxdb2
+    env_file:
+      - ./.env
+    entrypoint: ["./entrypoint.sh"]
+    restart: on-failure:3
+
+  telegraf:
+    image: telegraf
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+    env_file:
+      - ./.env
+    depends_on:
+      - influxdb
+
+volumes:
+  influxdbv2:
