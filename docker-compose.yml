@@ -12,6 +12,7 @@ services:
 
   telegraf:
     image: telegraf:1.21.4-alpine
+    user: telegraf:998
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
     env_file:
